@@ -1,4 +1,4 @@
-import { delay, Observable, of, Subject, tap } from 'rxjs';
+import { delay, map, Observable, of, Subject, tap } from 'rxjs';
 import { waitForAsync } from '@angular/core/testing';
 
 describe('RxJs exercises', () => {
@@ -8,11 +8,11 @@ describe('RxJs exercises', () => {
     obs$.subscribe(
       {
         next: (v) => {
-          expect(v).toEqual(expected[index++])
+          expect(v).toEqual(expected[index++]);
         },
-        error: e => fail(e),
+        error: () => expect(false).toBeTruthy(),
         complete: () => {
-          expect(index).toEqual(expected.length)
+          expect(index).toEqual(expected.length);
         },
       },
     );
@@ -34,7 +34,7 @@ describe('RxJs exercises', () => {
 
     //TODO here
 
-    obs$.complete()
+    obs$.complete();
   }));
 
   it('should map values', waitForAsync(() => {
@@ -53,16 +53,6 @@ describe('RxJs exercises', () => {
     const result$ = of(0);//TODO transform obs$
 
     const expected = ['1a', '2b', '3c'];
-    assertObs$(result$, expected);
-  }));
-
-  it('should merge observables together', waitForAsync(() => {
-    const obs1$ = of(1, 2, 3);
-    const obs2$ = of('a', 'b', 'c');
-
-    const result$ = of(0);//TODO transform obs$
-
-    const expected = [1, 'a', 2, 'b', 3, 'c'];
     assertObs$(result$, expected);
   }));
 
@@ -94,11 +84,20 @@ describe('RxJs exercises', () => {
   }));
 
   it('should catch and treat errors', waitForAsync(() => {
+
+    function doTheMath(v: number) {
+      if (v === 0) {
+        throw new Error();
+      }
+      return 10 / v;
+    }
+
     const obs$ = of(5, 4, 3, 2, 1, 0);
 
-    const result$ = of(0);//TODO transform obs$
+    //TODO modify this line
+    const result$ = obs$.pipe(map(v => doTheMath(v)));
 
-    const expected = [10/5, 10/4, 10/3, 10/2, 10, Infinity];
+    const expected = [10 / 5, 10 / 4, 10 / 3, 10 / 2, 10, Infinity];
     assertObs$(result$, expected);
   }));
 
@@ -113,9 +112,9 @@ describe('RxJs exercises', () => {
 
   it('should map by returning an observable', waitForAsync(() => {
 
-    function apiCall$(id: number): Observable<{id: number, response: string}> {
+    function apiCall$(id: number): Observable<{ id: number, response: string }> {
       //Some API call returning an object
-      return of({id, response: id.toString()}).pipe(delay(100))
+      return of({id, response: id.toString()}).pipe(delay(100));
     }
 
     const obs$ = of(5, 4, 3);
@@ -124,8 +123,8 @@ describe('RxJs exercises', () => {
     obs$.subscribe(id => {
       apiCall$(id).subscribe(apiResult => {
         result$.next(apiResult);
-      })
-    })
+      });
+    });
 
     const expected = [
       {id: 5, response: '5'},
@@ -135,7 +134,6 @@ describe('RxJs exercises', () => {
     assertObs$(result$, expected);
     result$.complete();//TODO remove this
   }));
-
 
   it('should generate an observable with 1000 values emitted', waitForAsync(() => {
     const result$ = of(0);//TODO transform obs$
@@ -164,12 +162,12 @@ describe('RxJs exercises', () => {
 
   it('should retry on API error', waitForAsync(() => {
 
-    function unreliableApiCall$(id: number): Observable<{id: number, response: string}> {
+    function unreliableApiCall$(id: number): Observable<{ id: number, response: string }> {
       //Some API call returning an object
       const response$ = of({id, response: id.toString()});
       if (Math.random() < 0.5) {
         // Simulate an issue
-        return response$.pipe(tap(() => {throw new Error()}))
+        return response$.pipe(tap(() => {throw new Error();}));
       }
       return response$;
     }
@@ -180,8 +178,8 @@ describe('RxJs exercises', () => {
     obs$.subscribe(id => {
       unreliableApiCall$(id).subscribe(apiResult => {
         result$.next(apiResult);
-      })
-    })
+      });
+    });
 
     const expected = [
       {id: 6, response: '6'},
