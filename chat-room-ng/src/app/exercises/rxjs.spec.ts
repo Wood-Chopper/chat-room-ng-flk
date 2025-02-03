@@ -1,4 +1,4 @@
-import { delay, map, Observable, of, Subject, tap } from 'rxjs';
+import { delay, last, map, mergeMap, Observable, of, retry, Subject, tap } from 'rxjs';
 import { waitForAsync } from '@angular/core/testing';
 
 describe('RxJs exercises', () => {
@@ -187,12 +187,13 @@ describe('RxJs exercises', () => {
 
     function unreliableApiCall$(id: number): Observable<{ id: number, response: string }> {
       //Some API call returning an object
-      const response$ = of({id, response: id.toString()});
-      if (Math.random() < 0.5) {
-        // Simulate an issue
-        return response$.pipe(tap(() => {throw new Error();}));
-      }
-      return response$;
+      return of({id, response: id.toString()}).pipe(
+        tap(() => {
+          if (Math.random() < 0.5) {
+            throw new Error();
+          }
+        })
+      );
     }
 
     const obs$ = of(6, 5, 4, 3, 2, 1, 0);
