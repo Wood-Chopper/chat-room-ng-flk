@@ -135,6 +135,29 @@ describe('RxJs exercises', () => {
     result$.complete();//TODO remove this
   }));
 
+  it('should map by returning an observable BUT only the last API call is emitted', waitForAsync(() => {
+
+    function apiCall$(id: number): Observable<{ id: number, response: string }> {
+      //Some API call returning an object
+      return of({id, response: id.toString()}).pipe(delay(100));
+    }
+
+    const obs$ = of(5, 4, 3);
+    //TODO subscription in subscription is a bad practice fix this code
+    const result$ = new Subject();
+    obs$.subscribe(id => {
+      apiCall$(id).subscribe(apiResult => {
+        result$.next(apiResult);
+      });
+    });
+
+    const expected = [
+      {id: 3, response: '3'},
+    ];
+    assertObs$(result$, expected);
+    result$.complete();//TODO remove this
+  }));
+
   it('should generate an observable with 1000 values emitted', waitForAsync(() => {
     const result$ = of(0);//TODO transform obs$
 
