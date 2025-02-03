@@ -71,6 +71,35 @@ Start by creating your domain model. Your application will mainly work with mess
 When it's done write the domain facade and build the various methods you will need. Follow those steps:
 
 * Write the method signatures without any implementation
-* Write the exposed observables
+* Write the observables that the facade exposes
 * Deduce the dependencies you will need to make the facade work
 
+### State layers
+
+Having your domain layer, you can now create the state layer using the store class (see code snippet).
+
+### Client Layer
+
+Implement the abstract classes of the domain layer in the client layer. Remember to use DTOs at the client side.
+
+For the client layer, use [json-server](https://www.npmjs.com/package/json-server) as API. Using json-server allows you to run your Angular application as a standalone application by providing a light local API server.
+
+to run the local api, run this command:
+
+```shell
+npm run local-api
+```
+
+### View layer
+
+Split your view layer into components. Make sure that are as dumb as possible. Logic code should go in the domain.
+
+## Day 2
+
+At this stage, we have a nice standalone application. But we can only talk to ourselves...
+
+Let's send the message into the data pipeline. Later on, we will be able to save the messages in database and receive live messages.
+
+### Send the message to Kinesis Data Stream
+
+Modify you client implementation to send the messages to Kinesis Data Stream

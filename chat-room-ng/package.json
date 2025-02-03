@@ -9,7 +9,7 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
-    "data": "json-server data/db.json"
+    "local-api": "json-server data/db.json"
   },
   "private": true,
   "dependencies": {
