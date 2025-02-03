@@ -10,4 +10,67 @@ The goal is to make the application evolve safely.
 
 ## Code snippets
 
-Some code example are available in 
+Some code example are available in the folder `code_snippets`
+
+## Day 1
+
+This fist days will focus on building a scalable Angular architecture for your chat room use-case.
+
+### Environment set up
+
+Make sure you have the correct Angular version. Latest Angular being in version 19, lets make sure we have it.
+
+Run this command to verify you Angular version:
+```shell
+ng --version
+```
+If you are in version 19, you are good. Otherwise, run the next commands.
+
+First uninstall any previous version of Angular CLI:
+```shell
+npm uninstall -g @angular/cli
+```
+
+Then, install the latest version:
+```shell
+npm install -g @angular/cli@latest
+```
+
+> **Important:** those 2 previous commands need to be run outside an existing node project.
+
+Try to run the Angular project in the folder ´chat-room-ng´
+
+### Use-case and software architecture
+
+You are asked to build a chatroom. The target is to exchange messages between different laptops.
+
+Following the same Angular Architecture used in Ewon Cloud, schematise an architecture so that your Angular project can safely evolve to the target.
+
+Use Miro to draw you schema. This schema will serve as a documentation base for the following days.
+
+### Folder and file structure
+
+You want your project structure to be as understandable as possible. create the folders following the architecture layers.
+
+Regarding the files, try to follow some conventions:
+
+| Type   | File name   |
+|--------|-------------|
+| Facade | *.facade.ts |
+| Store  | *.store.ts  |
+| Client | *.client.ts |
+| DTO    | *.dto.ts    |
+| model  | *.model.ts  |
+
+### Domain layers
+
+Now that we have our structure and some naming conventions, it's time to build our domain layer.
+
+Start by creating your domain model. Your application will mainly work with messages.
+
+When it's done write the domain facade and build the various methods you will need. Follow those steps:
+
+* Write the method signatures without any implementation
+* Write the exposed observables
+* Deduce the dependencies you will need to make the facade work
+

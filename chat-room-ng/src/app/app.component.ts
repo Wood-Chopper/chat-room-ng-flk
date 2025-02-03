@@ -5,8 +5,14 @@ import { RouterOutlet } from '@angular/router';
   selector: 'app-root',
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  providers: [
+
+  ]
 })
 export class AppComponent {
   title = 'chat-room-ng';
+
+  constructor() {
+  }
 }
