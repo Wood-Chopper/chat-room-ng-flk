@@ -94,7 +94,7 @@ npm run local-api
 
 Split your view layer into components. Make sure that are as dumb as possible. Logic code should go in the domain.
 
-## Day 2
+## From day 2
 
 At this stage, we have a nice standalone application. But we can only talk to ourselves...
 
@@ -102,4 +102,16 @@ Let's send the message into the data pipeline. Later on, we will be able to save
 
 ### Send the message to Kinesis Data Stream
 
-Modify you client implementation to send the messages to Kinesis Data Stream
+Modify your client implementation to send the messages to Kinesis Data Stream.
+
+### Connect Kinesis Data Stream with Flink
+
+Let's put our frontend on the side and focus on Flink.
+
+
+
+> The next tasks will depend on the progression.
+
+### Connect Flink to AppSync and Subscribe to AppSync in Angular
+
+### Connect Flink to InfluxDB and read from Influx in the frontend
