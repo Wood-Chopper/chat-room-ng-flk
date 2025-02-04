@@ -14,6 +14,13 @@ export class ChatRoomStore {
 
   readonly messages$ = this.store.select(state => state.messages);
 
+  setMessages(messages: Message[]) {
+    this.store.update(state => ({
+      ...state,
+      messages: messages
+    }))
+  }
+
   addMessage(message: Message): void {
     this.store.update(state => ({
       ...state,

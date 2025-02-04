@@ -1,0 +1,26 @@
+
+.messages-frame {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  border-bottom: 1px solid #ddd;
+}
+
+.message {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  max-width: 70%;
+}
+
+.my-message {
+  background-color: #007bff;
+  color: white;
+  margin-left: auto;
+}
+
+.other-message {
+  background-color: #e9ecef;
+  color: black;
+  margin-right: auto;
+}
