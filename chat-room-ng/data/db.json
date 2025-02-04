@@ -3,5 +3,37 @@
     {},
     {},
     {}
+  ],
+  "information": [
+    {
+      "id": "16f9",
+      "info": "My information",
+      "date": 1738661009414
+    },
+    {
+      "id": "fa0c",
+      "info": "My information two",
+      "date": 1738661051395
+    },
+    {
+      "id": "f930",
+      "info": "My information",
+      "date": 1738661917079
+    },
+    {
+      "id": "6257",
+      "info": "another one",
+      "date": 1738661929362
+    },
+    {
+      "id": "aeed",
+      "info": "somethogn",
+      "date": 1738662103348
+    },
+    {
+      "id": "9368",
+      "info": "somethogn",
+      "date": 1738662124623
+    }
   ]
 }
