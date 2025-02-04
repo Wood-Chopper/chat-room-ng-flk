@@ -1,4 +1,4 @@
-import { filter, map, Observable, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { InformationClientGateway } from '../domain/gateway/information.client.gateway';
 import { Information } from '../domain/model/information.model';
 import { HttpClient } from '@angular/common/http';
@@ -22,4 +22,9 @@ export class InformationClient extends InformationClientGateway {
     )
   }
 
+}
+
+export const INFORMATION_CLIENT_PROVIDER = {
+  provide: InformationClientGateway,
+  useClass: InformationClient
 }

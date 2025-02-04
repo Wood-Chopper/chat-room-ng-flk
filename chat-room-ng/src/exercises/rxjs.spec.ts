@@ -1,4 +1,4 @@
-import { delay, last, map, mergeMap, Observable, of, retry, Subject, tap } from 'rxjs';
+import { delay, map, Observable, of, Subject, tap } from 'rxjs';
 import { waitForAsync } from '@angular/core/testing';
 
 describe('RxJs exercises', () => {
