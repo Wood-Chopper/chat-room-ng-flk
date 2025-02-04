@@ -14,7 +14,7 @@ export class ChatRoomFacade {
   chatRoomStore = inject(ChatRoomStore);
   messageClient = inject(MessagesClientGateway);
 
-  messages$: Observable<Message[]> = this.chatRoomStore.messages$;
+  readonly messages$: Observable<Message[]> = this.chatRoomStore.messages$;
 
   loadMessages(): void {
     this.messageClient.getMessages()
