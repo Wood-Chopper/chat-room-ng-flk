@@ -15,13 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package se.hms;
 
 import com.amazonaws.services.kinesisanalytics.runtime.KinesisAnalyticsRuntime;
+import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.connector.kinesis.source.KinesisStreamsSource;
+import org.apache.flink.connector.kinesis.source.config.KinesisSourceConfigOptions;
+import org.apache.flink.connector.kinesis.source.config.KinesisSourceConfigOptions.InitialPosition;
+import org.apache.flink.connector.kinesis.source.enumerator.assigner.ShardAssignerFactory;
+import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -52,7 +59,42 @@ public class DataStreamJob {
 		final String influxdbOrg = applicationProperties.get("influxdb").getProperty("organisation");
 		final String kinesisArn = applicationProperties.get("kinesis").getProperty("data.pipeline.arn");
 
+		// KinesisStreamsSource
+		Configuration sourceConfig = new Configuration();
+		sourceConfig.set(KinesisSourceConfigOptions.STREAM_INITIAL_POSITION, InitialPosition.LATEST); // This is optional, by default connector will read from LATEST
 
+		// Create a new KinesisStreamsSource to read from specified Kinesis Stream.
+		KinesisStreamsSource<MessageDto> kdsSource =
+				KinesisStreamsSource.<MessageDto>builder()
+						.setStreamArn(kinesisArn)
+						.setSourceConfig(sourceConfig)
+						.setDeserializationSchema(new MessageDtoDeserializationSchema())
+						.setKinesisShardAssigner(ShardAssignerFactory.uniformShardAssigner()) // This is optional, by default uniformShardAssigner will be used.
+						.build();
+
+		DataStream<MessageDto> kinesisRecordsWithEventTimeWatermarks = env.fromSource(
+						kdsSource,
+						WatermarkStrategy.<MessageDto>forBoundedOutOfOrderness(Duration.ofSeconds(5))
+								.withTimestampAssigner((event, timestamp) -> event.getTimestamp()),
+						"Kinesis data-stream"
+				)
+				.returns(MessageDto.class)
+				.uid("source-id");
+
+		kinesisRecordsWithEventTimeWatermarks
+				.map(element -> {
+					final MessageModel messageModel = new MessageModel();
+					messageModel.setId(element.getId());
+					messageModel.setContent(element.getContent());
+					messageModel.setTimestamp(element.getTimestamp());
+					messageModel.setAuthor(element.getAuthor());
+					messageModel.setCharacters(element.getContent().length());
+					return messageModel;
+				})
+				.filter(message -> message.getCharacters() <= 100)
+						.sinkTo(new AppSyncEventsSink());
+
+		System.out.println(env.getExecutionPlan());
 
 		// Execute program, beginning computation.
 		env.execute("Flink Chat Room Processing");
@@ -61,7 +103,7 @@ public class DataStreamJob {
 	private static Map<String, Properties> getApplicationProperties() throws IOException {
 		Map<String, Properties> applicationProperties = KinesisAnalyticsRuntime.getApplicationProperties();
 
-		if (applicationProperties == null) {
+		if (applicationProperties.isEmpty()) {
 			final Properties influxDbProperties = new Properties();
 			influxDbProperties.put("token", "");
 			influxDbProperties.put("url", "");
@@ -69,7 +111,7 @@ public class DataStreamJob {
 			influxDbProperties.put("organisation", "my-org");
 
 			final Properties kinesisProperties = new Properties();
-			kinesisProperties.put("data.pipeline.arn", "");
+			kinesisProperties.put("data.pipeline.arn", "arn:aws:kinesis:us-east-1:635186394528:stream/jena-training");
 
 			applicationProperties = Map.ofEntries(
 					Map.entry("influxdb", influxDbProperties),
