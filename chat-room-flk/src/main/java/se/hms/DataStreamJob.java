@@ -18,7 +18,13 @@
 
 package se.hms;
 
+import com.amazonaws.services.kinesisanalytics.runtime.KinesisAnalyticsRuntime;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+
+import java.io.IOException;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 /**
  * Skeleton for a Flink DataStream Job.
@@ -39,27 +45,38 @@ public class DataStreamJob {
 		// to building Flink applications.
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-		/*
-		 * Here, you can start creating your execution plan for Flink.
-		 *
-		 * Start with getting some data from the environment, like
-		 * 	env.fromSequence(1, 10);
-		 *
-		 * then, transform the resulting DataStream<Long> using operations
-		 * like
-		 * 	.filter()
-		 * 	.flatMap()
-		 * 	.window()
-		 * 	.process()
-		 *
-		 * and many more.
-		 * Have a look at the programming guide:
-		 *
-		 * https://nightlies.apache.org/flink/flink-docs-stable/
-		 *
-		 */
+		Map<String, Properties> applicationProperties = getApplicationProperties();
+		final String influxdbToken = applicationProperties.get("influxdb").getProperty("token");
+		final String influxdbUrl = applicationProperties.get("influxdb").getProperty("url");
+		final String influxdbBucket = applicationProperties.get("influxdb").getProperty("default.bucket");
+		final String influxdbOrg = applicationProperties.get("influxdb").getProperty("organisation");
+		final String kinesisArn = applicationProperties.get("kinesis").getProperty("data.pipeline.arn");
+
+
 
 		// Execute program, beginning computation.
 		env.execute("Flink Chat Room Processing");
+	}
+
+	private static Map<String, Properties> getApplicationProperties() throws IOException {
+		Map<String, Properties> applicationProperties = KinesisAnalyticsRuntime.getApplicationProperties();
+
+		if (applicationProperties == null) {
+			final Properties influxDbProperties = new Properties();
+			influxDbProperties.put("token", "");
+			influxDbProperties.put("url", "");
+			influxDbProperties.put("default.bucket", "my-bucket");
+			influxDbProperties.put("organisation", "my-org");
+
+			final Properties kinesisProperties = new Properties();
+			kinesisProperties.put("data.pipeline.arn", "");
+
+			applicationProperties = Map.ofEntries(
+					Map.entry("influxdb", influxDbProperties),
+					Map.entry("kinesis", kinesisProperties)
+			);
+		}
+
+		return applicationProperties;
 	}
 }
