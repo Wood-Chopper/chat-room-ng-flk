@@ -1,40 +1,5 @@
 {
   "messages": [
-    {
-      "id": "690a",
-      "timestamp": 1738675028680,
-      "content": "something",
-      "author": "me"
-    },
-    {
-      "id": "5f99",
-      "timestamp": 1738675289814,
-      "content": "Hi!",
-      "author": "me"
-    },
-    {
-      "id": "ea3f",
-      "timestamp": 1738675695913,
-      "content": "Hello !",
-      "author": "me"
-    },
-    {
-      "id": "e165",
-      "timestamp": 1738675765010,
-      "content": "done",
-      "author": "me"
-    },
-    {
-      "id": "4e7b",
-      "timestamp": 1738675771331,
-      "content": "esdfsdf",
-      "author": "me"
-    },
-    {
-      "id": "e642",
-      "timestamp": 1738682314379,
-      "content": "Tupe a message",
-      "author": "me"
-    }
+
   ]
 }

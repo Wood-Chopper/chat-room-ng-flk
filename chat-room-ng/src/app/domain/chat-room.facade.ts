@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { Message } from './model/message.model';
 import { ChatRoomStore } from '../state/chat-room.store';
 import { MessagesClientGateway } from './gateway/messages-client.gateway';
+import { LiveMessagesClientGateway } from './gateway/live-messages.client.gateway';
 
 @Injectable(
   {
@@ -13,8 +14,15 @@ export class ChatRoomFacade {
 
   chatRoomStore = inject(ChatRoomStore);
   messageClient = inject(MessagesClientGateway);
+  liveMessagesClient = inject(LiveMessagesClientGateway);
 
   readonly messages$: Observable<Message[]> = this.chatRoomStore.messages$;
+
+  constructor() {
+    this.liveMessagesClient.listenToMessages().pipe(
+      filter(msg => msg.author !== 'jena')
+    ).subscribe(msg => this.chatRoomStore.addMessage(msg))
+  }
 
   loadMessages(): void {
     this.messageClient.getMessages()
@@ -25,7 +33,7 @@ export class ChatRoomFacade {
     this.messageClient.postMessage({
                                      content: message,
                                      date: new Date(),
-                                     author: 'me',
+                                     author: 'jena',
                                    })
       .subscribe(msg => this.chatRoomStore.addMessage(msg));
   }

@@ -2,11 +2,13 @@ package se.hms;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 
 import java.io.IOException;
 
+@Slf4j
 public class MessageDtoDeserializationSchema implements DeserializationSchema<MessageDto> {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper()
@@ -15,7 +17,12 @@ public class MessageDtoDeserializationSchema implements DeserializationSchema<Me
 
 	@Override
 	public MessageDto deserialize(final byte[] message) throws IOException {
-		return objectMapper.readValue(message, MessageDto.class);
+		try {
+			return objectMapper.readValue(message, MessageDto.class);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return null;
+		}
 	}
 
 	@Override

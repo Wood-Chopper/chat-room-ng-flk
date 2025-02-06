@@ -29,8 +29,11 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -61,7 +64,8 @@ public class DataStreamJob {
 
 		// KinesisStreamsSource
 		Configuration sourceConfig = new Configuration();
-		sourceConfig.set(KinesisSourceConfigOptions.STREAM_INITIAL_POSITION, InitialPosition.LATEST); // This is optional, by default connector will read from LATEST
+		sourceConfig.set(KinesisSourceConfigOptions.STREAM_INITIAL_POSITION, InitialPosition.AT_TIMESTAMP); // This is optional, by default connector will read from LATEST
+		sourceConfig.set(KinesisSourceConfigOptions.STREAM_INITIAL_TIMESTAMP, String.valueOf(Instant.now().minus(5, ChronoUnit.MINUTES).getEpochSecond()));
 
 		// Create a new KinesisStreamsSource to read from specified Kinesis Stream.
 		KinesisStreamsSource<MessageDto> kdsSource =
@@ -82,6 +86,7 @@ public class DataStreamJob {
 				.uid("source-id");
 
 		kinesisRecordsWithEventTimeWatermarks
+				.filter(Objects::nonNull)
 				.map(element -> {
 					final MessageModel messageModel = new MessageModel();
 					messageModel.setId(element.getId());

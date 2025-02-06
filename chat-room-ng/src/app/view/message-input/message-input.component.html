@@ -1,5 +1,5 @@
 <!-- Input Area -->
 <div class="input-area">
-  <input [formControl]="inputForm" type="text" id="message-input" placeholder="Type your message..." />
+  <input (keyup.enter)="send()" [formControl]="inputForm" type="text" id="message-input" placeholder="Type your message..." />
   <button id="send-button" (click)="send()">Send</button>
 </div>

@@ -21,6 +21,8 @@ export class MessageInputComponent {
       let value: string = this.inputForm.value!;
 
       this.chatRoomFacade.publishMessage(value);
+
+      this.inputForm.reset();
     }
 
   }
