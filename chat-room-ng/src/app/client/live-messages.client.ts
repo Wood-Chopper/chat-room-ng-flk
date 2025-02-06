@@ -5,6 +5,7 @@ import { Amplify } from 'aws-amplify';
 import { events } from 'aws-amplify/data';
 import { MessagesClientGateway } from '../domain/gateway/messages-client.gateway';
 import { MessagesClient } from './messages.client';
+import { messageToModel } from './mapper/message.mapper';
 
 export class LiveMessagesClient extends LiveMessagesClientGateway {
 
@@ -41,7 +42,8 @@ export class LiveMessagesClient extends LiveMessagesClientGateway {
         );
         return events$;
       }),
-      map(something => something['event'])
+      map(something => something['event']),
+      map(messageToModel)
     );
   }
 

@@ -87,13 +87,16 @@ public class DataStreamJob {
 
 		kinesisRecordsWithEventTimeWatermarks
 				.filter(Objects::nonNull)
+				.filter(dto -> dto.getContent() != null)
 				.map(element -> {
 					final MessageModel messageModel = new MessageModel();
 					messageModel.setId(element.getId());
 					messageModel.setContent(element.getContent());
 					messageModel.setTimestamp(element.getTimestamp());
 					messageModel.setAuthor(element.getAuthor());
-					messageModel.setCharacters(element.getContent().length());
+					if (element.getContent() != null) {
+						messageModel.setCharacters(element.getContent().length());
+					}
 					return messageModel;
 				})
 				.filter(message -> message.getCharacters() <= 100)

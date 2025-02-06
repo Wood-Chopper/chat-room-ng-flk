@@ -3,8 +3,8 @@
   <!-- Example messages -->
   @for (message of messages$$(); track message) {
     <div class="message" [ngClass]="{
-    'my-message': message.author === 'jena',
-    'other-message': message.author !== 'jena'
-    }">{{ message.content }}</div>
+    'my-message': message.author === 'jerome',
+    'other-message': message.author !== 'jerome'
+    }"><b>{{message.author}}:</b> {{ message.content }}</div>
   }
 </div>

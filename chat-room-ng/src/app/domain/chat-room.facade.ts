@@ -20,7 +20,7 @@ export class ChatRoomFacade {
 
   constructor() {
     this.liveMessagesClient.listenToMessages().pipe(
-      filter(msg => msg.author !== 'jena')
+      filter(msg => msg.author !== 'jerome')
     ).subscribe(msg => this.chatRoomStore.addMessage(msg))
   }
 
@@ -33,7 +33,7 @@ export class ChatRoomFacade {
     this.messageClient.postMessage({
                                      content: message,
                                      date: new Date(),
-                                     author: 'jena',
+                                     author: 'jerome',
                                    })
       .subscribe(msg => this.chatRoomStore.addMessage(msg));
   }

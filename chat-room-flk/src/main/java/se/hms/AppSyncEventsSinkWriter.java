@@ -34,7 +34,7 @@ public class AppSyncEventsSinkWriter implements SinkWriter<MessageModel> {
 			HttpRequest request = HttpRequest.newBuilder()
 					.uri(new URI("https://q5ckogzm75cwzlkl45yp4koibm.appsync-api.us-east-1.amazonaws.com/event"))
 					.headers("Content-Type", "application/json")
-					.headers("x-api-key", "da2-qntivzjasvaklmshyqqaqaxmh4")
+					.headers("x-api-key", "da2-xksnily5evdyfg7zk2jyxkiw5y")
 					.POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(appSyncEventModel)))
 					.build();
 
