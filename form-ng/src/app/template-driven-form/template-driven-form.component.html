@@ -1,0 +1,14 @@
+<div>
+  usr: <input name="username" [(ngModel)]="formInformation.username"/><br/>
+  pwd 1: <input type="password" name="pwd1" [ngModel]="formInformation.pwd1" (ngModelChange)="formInformation.pwd1 = $event"/><br/>
+  pwd 2: <input type="password" name="pwd2" [(ngModel)]="formInformation.pwd2"/><br/>
+  email: <input type="email" name="email" [(ngModel)]="formInformation.email"><br/>
+</div>
+
+<hr/>
+
+<p>
+  {{ formInformation | json }}
+</p>
+
+<button (click)="register()" [disabled]="isValid()"> Register </button>

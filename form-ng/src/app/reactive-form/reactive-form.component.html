@@ -1,0 +1,20 @@
+<form [formGroup]="formGroup">
+  usr: <input name="username" formControlName="username" /><br/>
+  pwd 1: <input type="password" name="pwd1" formControlName="pwd1"/>
+  {{ formGroup.controls.pwd1.errors | json }}
+  <br/>
+  pwd 2: <input type="password" name="pwd2" formControlName="pwd2"/>
+  {{formGroup.errors | json}}
+  <br/>
+  email: <input type="email" name="email" formControlName="email"><br/>
+
+  locationSearch: <input name="locationSearch" formControlName="locationSearch"><br/>
+</form>
+
+<hr/>
+
+<p>
+  {{ formGroup.value | json }}
+</p>
+
+<button (click)="register()" [disabled]="formGroup.invalid"> Register </button>
